@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences mSharedPreferences;
     private int firstOpenApp = 0;
     private static final String DATA = "DATA";
+    private boolean isLoggedin = false;
 
     // 全域
     private GlobalVariable gv;
@@ -113,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         // 檢驗第一次啟動ＡＰＰ & 在 firstOpenAPP 存 UserID
         mSharedPreferences = getSharedPreferences(DATA, MODE_PRIVATE);
         firstOpenApp = mSharedPreferences.getInt("Open", firstOpenApp);
+        isLoggedin = mSharedPreferences.getBoolean("log", isLoggedin);
 
 
 
@@ -143,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
             Toast.makeText(MainActivity.this,"Uid "+firstOpenApp, Toast.LENGTH_LONG).show();
+        Toast.makeText(MainActivity.this,"log   "+isLoggedin, Toast.LENGTH_LONG).show();
 //         設定全域變數 Uid
             gv.setUid(firstOpenApp);
         return firstOpenApp;
@@ -268,13 +271,13 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(it);
                     return true;
                 }
-                else if (id == R.id.action_settings) {
-                    // 按下「設定」要做的事
-//                    Toast.makeText(MainActivity.this, "設定", Toast.LENGTH_SHORT).show();
-                    it = new Intent(MainActivity.this, Setting.class);
-                    startActivity(it);
-                    return true;
-                }
+//                else if (id == R.id.action_settings) {
+//                    // 按下「設定」要做的事
+////                    Toast.makeText(MainActivity.this, "設定", Toast.LENGTH_SHORT).show();
+//                    it = new Intent(MainActivity.this, Setting.class);
+//                    startActivity(it);
+//                    return true;
+//                }
                 else if (id == R.id.action_about) {
                     // 按下「關於」要做的事
 //                    Toast.makeText(MainActivity.this, "關於", Toast.LENGTH_SHORT).show();

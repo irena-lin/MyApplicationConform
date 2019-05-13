@@ -23,10 +23,10 @@
             android:title="活動"
             android:icon="@drawable/ic_event_note_black_24dp"/>
 
-        <item
-            android:id="@+id/action_settings"
-            android:title="設定"
-            android:icon="@drawable/ic_settings_black_24dp"/>
+        <!--<item-->
+            <!--android:id="@+id/action_settings"-->
+            <!--android:title="一覽"-->
+            <!--android:icon="@drawable/ic_format_list_bulleted_black_24dp"/>-->
 
         <item
             android:id="@+id/action_about"

@@ -93,12 +93,12 @@ public class Event extends AppCompatActivity {
                     it = new Intent(Event.this, Event.class);
                     startActivity(it);
                     return true;
-                } else if (id == R.id.action_settings) {
-                    // 按下「設定」要做的事
-//                    Toast.makeText(Event.this, "設定", Toast.LENGTH_SHORT).show();
-                    it = new Intent(Event.this, Setting.class);
-                    startActivity(it);
-                    return true;
+//                } else if (id == R.id.action_settings) {
+//                    // 按下「設定」要做的事
+////                    Toast.makeText(Event.this, "設定", Toast.LENGTH_SHORT).show();
+//                    it = new Intent(Event.this, Setting.class);
+//                    startActivity(it);
+//                    return true;
                 } else if (id == R.id.action_about) {
                     // 按下「關於」要做的事
 //                    Toast.makeText(Event.this, "關於", Toast.LENGTH_SHORT).show();

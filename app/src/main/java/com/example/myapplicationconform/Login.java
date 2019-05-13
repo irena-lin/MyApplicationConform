@@ -1,6 +1,7 @@
 package com.example.myapplicationconform;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -97,11 +98,11 @@ public class Login extends AppCompatActivity {
                     it = new Intent(Login.this, Event.class);
                     startActivity(it);
                     return true;
-                } else if (id == R.id.action_settings) {
-                    // 按下「設定」要做的事
-                    it = new Intent(Login.this, Setting.class);
-                    startActivity(it);
-                    return true;
+//                } else if (id == R.id.action_settings) {
+//                    // 按下「設定」要做的事
+//                    it = new Intent(Login.this, Setting.class);
+//                    startActivity(it);
+//                    return true;
                 } else if (id == R.id.action_about) {
                     // 按下「關於」要做的事
                     it = new Intent(Login.this, About.class);
@@ -150,6 +151,12 @@ public class Login extends AppCompatActivity {
                                 Toast.makeText(Login.this, "尚未註冊", Toast.LENGTH_LONG).show();
                             }else if(response.code() == 200) {
                                 Toast.makeText(Login.this, "登入成功", Toast.LENGTH_LONG).show();
+
+                                final String DATA = "DATA";
+                                SharedPreferences mSharedPreferences = getSharedPreferences(DATA, MODE_PRIVATE);
+                                mSharedPreferences.edit()
+                                        .putBoolean("log", true)
+                                        .apply();
                             }else{
                                 Toast.makeText(Login.this, "伺服器未連線", Toast.LENGTH_LONG).show();
                             }

@@ -29,10 +29,13 @@ public interface MyAPIService {
 
 
     @GET("productList")
-    Call<ResponseBody> getProductList();
+    Call<productList> getProductList();
 
     @GET("node")
     Call<nodeSchema> getnode();
+
+    @GET("feedback/{Pid}")
+    Call<feedback> getFeedback(@Path("Pid")int Pid);
 
     @FormUrlEncoded
     @POST("feedback/{Uid}/{Pid}")

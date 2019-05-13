@@ -1,6 +1,5 @@
 package com.example.myapplicationconform;
 
-import android.app.Application;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,47 +7,38 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
+public class ProductListAdapter extends BaseAdapter {
 
-class ProductAdapter extends BaseAdapter {
-
-    private List<productName> result;
+    private List<productListSchema> result;
     private GlobalVariable gv;
 
     private void getData() {
-         gv = (GlobalVariable)context1.getApplicationContext();
+        gv = (GlobalVariable)context1.getApplicationContext();
 
-        Call<productNameSchema> call = gv.getApi().getProductName();
+        Call<productList> call = gv.getApi().getProductList();
 
-        final ProductAdapter PA = this;
+        final ProductListAdapter PLA = this;
 
-        call.enqueue(new Callback<productNameSchema>() {
+        call.enqueue(new Callback<productList>() {
             @Override
-            public void onResponse(Call<productNameSchema> call, Response<productNameSchema> response) {
-                result = response.body().getProductName();
-                PA.data = result;
-                PA.notifyDataSetChanged();
+            public void onResponse(Call<productList> call, Response<productList> response) {
+                result = response.body().getProductList();
+                PLA.data = result;
+                PLA.notifyDataSetChanged();
             }
 
             @Override
-            public void onFailure(Call<productNameSchema> call, Throwable t) {
+            public void onFailure(Call<productList> call, Throwable t) {
 //                Toast.makeText(context1, t.toString(), Toast.LENGTH_LONG);
 
             }
@@ -58,15 +48,15 @@ class ProductAdapter extends BaseAdapter {
 
     static class ViewHolder {
         public ImageView icon;
-        public TextView Pid;
+        public TextView description;
         public TextView Pname;
     }
 
-    private List<productName> data = new ArrayList<productName>();
+    private List<productListSchema> data = new ArrayList<productListSchema>();
     private LayoutInflater mInflater = null;
     private Context context1;
 
-    public ProductAdapter(Context context) {
+    public ProductListAdapter(Context context) {
         context1 = context;
         getData();
         this.mInflater = LayoutInflater.from(context);
@@ -80,7 +70,7 @@ class ProductAdapter extends BaseAdapter {
     }
 
     @Override
-    public productName getItem(int position) {
+    public productListSchema getItem(int position) {
 
         return data.get(position);
     }
@@ -94,20 +84,20 @@ class ProductAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+       ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.feedback_listitem, null);
             holder.icon = (ImageView) convertView.findViewById(R.id.UserIcon);
-            holder.Pid = (TextView) convertView.findViewById(R.id.UserName);
-            holder.Pname = (TextView) convertView.findViewById(R.id.Feedback);
+            holder.Pname = (TextView) convertView.findViewById(R.id.UserName);
+            holder.description = (TextView) convertView.findViewById(R.id.Feedback);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         Picasso.get().load(gv.getUrl()+data.get(position).getIcon()).into(holder.icon);
-        holder.Pid.setText(data.get(position).getPid().toString());
-        holder.Pname.setText( data.get(position).getPname());
+        holder.Pname.setText(data.get(position).getPname());
+        holder.description.setText( data.get(position).getDescription());
 
         return convertView;
     }

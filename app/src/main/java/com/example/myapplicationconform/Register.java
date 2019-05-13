@@ -88,11 +88,11 @@ public class Register extends AppCompatActivity {
                     it = new Intent(Register.this, Event.class);
                     startActivity(it);
                     return true;
-                } else if (id == R.id.action_settings) {
-                    // 按下「設定」要做的事
-                    it = new Intent(Register.this, Setting.class);
-                    startActivity(it);
-                    return true;
+//                } else if (id == R.id.action_settings) {
+//                    // 按下「設定」要做的事
+//                    it = new Intent(Register.this, Setting.class);
+//                    startActivity(it);
+//                    return true;
                 } else if (id == R.id.action_about) {
                     // 按下「關於」要做的事
                     it = new Intent(Register.this, About.class);

@@ -54,8 +54,6 @@ public class FeedbackActivity extends AppCompatActivity {
     private FloatingActionButton fab;
     private LayoutInflater inflater;
 
-    private String input;
-
     // adapter (適配器) => Spinner\list view
     private ProductAdapter productAdapter;
 
@@ -76,7 +74,7 @@ public class FeedbackActivity extends AppCompatActivity {
 
         // spin => spinner
         spin();
-        listView();
+        listView(1);
 
         // 漂浮的 +
         floatButton();
@@ -140,12 +138,12 @@ public class FeedbackActivity extends AppCompatActivity {
                     it = new Intent(FeedbackActivity.this, Event.class);
                     startActivity(it);
                     return true;
-                } else if (id == R.id.action_settings) {
-                    // 按下「設定」要做的事
-//                    Toast.makeText(FeedbackActivity.this, "設定", Toast.LENGTH_SHORT).show();
-                    it = new Intent(FeedbackActivity.this, Setting.class);
-                    startActivity(it);
-                    return true;
+//                } else if (id == R.id.action_settings) {
+//                    // 按下「設定」要做的事
+////                    Toast.makeText(FeedbackActivity.this, "設定", Toast.LENGTH_SHORT).show();
+//                    it = new Intent(FeedbackActivity.this, Setting.class);
+//                    startActivity(it);
+//                    return true;
                 } else if (id == R.id.action_about) {
                     // 按下「關於」要做的事
 //                    Toast.makeText(FeedbackActivity.this, "關於", Toast.LENGTH_SHORT).show();
@@ -178,13 +176,15 @@ public class FeedbackActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             EditText editText = (EditText) (v.findViewById(R.id.feedback));
 
-                            Call<feedbackSchema> call = gv.getApi().feedback(gv.getUid(), Pid, input);
+                            Call<feedbackSchema> call = gv.getApi().feedback(gv.getUid(), Pid, editText.getText().toString());
 
                             call.enqueue(new Callback<feedbackSchema>() {
                                 @Override
                                 public void onResponse(Call<feedbackSchema> call, Response<feedbackSchema> response) {
 
                                     Toast.makeText(getApplicationContext(), "意見發布成功", Toast.LENGTH_LONG).show();
+
+                                    listView(Pid);
                                 }
 
                                 @Override
@@ -221,23 +221,18 @@ public class FeedbackActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 productName o = productAdapter.getItem(position);
-                int test = spinner.getSelectedItemPosition();
-                TextView t = (TextView)findViewById(R.id.textView4);
-                t.setText(String.valueOf(position));
 
-                System.out.println( "你選的是"+ String.valueOf(test));
+                System.out.println( "你選的是"+ id);
 
-                Toast.makeText(parent.getContext(), "你選的是" +  spinner.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "你選的是" +  o.getPid(), Toast.LENGTH_SHORT).show();
+                Pid = o.getPid();
+
+                listView(o.getPid());
 
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                productName o = productAdapter.getItem(1);
-
-                TextView t = (TextView)findViewById(R.id.textView4);
-                t.setText(o.toString());
-                Toast.makeText(FeedbackActivity.this, "你選的是" + o.getPid() + "預設", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -245,13 +240,13 @@ public class FeedbackActivity extends AppCompatActivity {
 
     }
 
-    void listView() {
-//        listView = (ListView) findViewById(R.id.listView);
-//        // Get Feedback
-//        // Feedback Adapter
-//        FeedbackAdapter adapter = new FeedbackAdapter(FeedbackActivity.this);
-////        recycler_view.setLayoutManager(new LinearLayoutManager(this));
-//        listView.setAdapter(adapter);
+    void listView(int pid) {
+        listView = (ListView) findViewById(R.id.listView);
+        // Get Feedback
+        // Feedback Adapter
+        FeedbackAdapter adapter = new FeedbackAdapter(FeedbackActivity.this, pid);
+//        recycler_view.setLayoutManager(new LinearLayoutManager(this));
+        listView.setAdapter(adapter);
     }
 
 

@@ -18,7 +18,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -94,10 +96,9 @@ public class MainActivity2 extends AppCompatActivity implements BeaconConsumer {
     private TextView description;
     private Button image;
     private Button vedio;
-    private int[] P;
+    private int[] P = new int[2];
     private int p;
-
-
+    private int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -292,13 +293,13 @@ public class MainActivity2 extends AppCompatActivity implements BeaconConsumer {
                     startActivity(it);
                     return true;
                 }
-                else if (id == R.id.action_settings) {
-                    // 按下「設定」要做的事
-//                    Toast.makeText(MainActivity2.this, "設定", Toast.LENGTH_SHORT).show();
-                    it = new Intent(MainActivity2.this, Setting.class);
-                    startActivity(it);
-                    return true;
-                }
+//                else if (id == R.id.action_settings) {
+//                    // 按下「設定」要做的事
+////                    Toast.makeText(MainActivity2.this, "設定", Toast.LENGTH_SHORT).show();
+//                    it = new Intent(MainActivity2.this, Setting.class);
+//                    startActivity(it);
+//                    return true;
+//                }
                 else if (id == R.id.action_about) {
                     // 按下「關於」要做的事
 //                    Toast.makeText(MainActivity2.this, "關於", Toast.LENGTH_SHORT).show();
@@ -456,18 +457,58 @@ public class MainActivity2 extends AppCompatActivity implements BeaconConsumer {
         button3.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LayoutInflater inflater = LayoutInflater.from(MainActivity2.this);
-                final View vi = inflater.inflate(R.layout.dialog_map, null);
+//                LayoutInflater inflater = LayoutInflater.from(MainActivity2.this);
+//                final View vi = inflater.inflate(R.layout.dialog_map, null);
+
+                ImageView IV = new ImageView(getApplicationContext());
+                IV.setImageResource(R.drawable.map);
+
+                final RelativeLayout RL = new RelativeLayout(getApplicationContext());
+                RL.addView(IV);
+                int dimensionInDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
+                IV.getLayoutParams().height = dimensionInDp;
+                IV.requestLayout();
+
+                count = 0;
+
+                for (int i = 0; i<item.size(); i++) {
+                    I = new ImageButton(MainActivity2.this);
+                    I.setImageResource(R.drawable.ic_place_black_24dp);
+                    I.setBackgroundColor(Color.TRANSPARENT);
+                    I.setId(item.get(i)*10+1);
+                    System.out.println("id    "+ I.getId());
+                    I.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (count < item.size()) {
+                                System.out.println("V.getid"+ v.getId()+"  count"+count+ "   P"+P);
+                                ImageButton IB = (ImageButton)RL.findViewById(v.getId());
+                                IB.setImageResource(gv.getNumIcon1(count));
+                                P[count] = (int)v.getId()/100;
+                                count++;
+                            }else{
+                                Toast.makeText(MainActivity2.this,"已設定\n請點選'SUBMIT'以儲存\n若要重新選擇請點選'CANCEL'", Toast.LENGTH_LONG);
+                            }
+
+                        }
+                    });
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(100, 100);
+//                    lp.addRule(RelativeLayout.ABOVE, R.id.toolbar);
+                    lp.setMargins(i*500,i*500,i*500,i*500);
+                    I.setLayoutParams(lp);
+                    RL.addView(I);
+                }
+
 
                 new AlertDialog.Builder(MainActivity2.this)
                         .setTitle("自定義路線")//設定視窗標題
-                        .setView(vi)//設定顯示的視窗頁面
+                        .setView(RL)//設定顯示的視窗頁面
                         .setPositiveButton("SUBMIT",new DialogInterface.OnClickListener(){
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
                                 for (int i = 0; i < P.length; i++) {
-                                    p = p + P[i];
+                                    p = p * 10 + P[i];
                                 }
 
                                 Call<pathSchema> call = gv.getApi().postPath(gv.getUid(), p);
@@ -491,7 +532,7 @@ public class MainActivity2 extends AppCompatActivity implements BeaconConsumer {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
                                 Toast.makeText(MainActivity2.this, "Cancel",Toast.LENGTH_SHORT).show();
-                                finish();
+
                             }
 
                         })
@@ -504,59 +545,59 @@ public class MainActivity2 extends AppCompatActivity implements BeaconConsumer {
     @Override
     public void onBeaconServiceConnect() {
 
-//        beaconManager.addRangeNotifier(new RangeNotifier() {
-//            @Override
-//            public void didRangeBeaconsInRegion(Collection<Beacon> collection, Region region) {
-//                Log.i("IIIIII", "didRangeBeaconsInRegion: 调用了这个方法:" + collection.size());
-//                if (collection.size() > 0) {
-//                    //符合要求的beacon集合
-//                    List<Beacon> beacons = new ArrayList<>();
-//                    ArrayList myList = new ArrayList();
-//                    for (Beacon beacon : collection) {
-//                        beacons.add(beacon);
-//                        url = UrlBeaconUrlCompressor.uncompress(beacon.getId1().toByteArray());
-//                        String[] array  = url.split("/");
-////                        String BASE_URL = array[0] + "//" + array[2] + ".ngrok.io";
-//
-//                        path = Integer.parseInt(array[3]);
-//
-////                        url = BASE_URL + "/" + path;
-//                        if ( gv.getdUrl() == array[2] ){
-//                            if( myList.size() < 2 || myList.get(myList.size()-1) != url){
-//                                myList.add(url);
-//
-//                            }
-//                        }
-//
-//
-//                    }
-//
-//                        retrofit2.Call<pathSchema> call = gv.getApi().getpath(gv.getUid(), path);
-//
-//                        call.enqueue(new Callback<pathSchema>() {
-//                            @Override
-//                            public void onResponse(retrofit2.Call<pathSchema> call, Response<pathSchema> response) {
-//
-//                                result = response.body().getPath();
-//                            }
-//                            @Override
-//                            public void onFailure(Call<pathSchema> call, Throwable t) {
-////                                Toast.makeText(MainActivity2.this,t.toString(), Toast.LENGTH_LONG).show();
-//                            }
-//                        });
-//
-//                    }
-//
-//                }
-//
-//
-//        });
-//        try {
-////            别忘了启动搜索,不然不会调用didRangeBeaconsInRegion方法
-//            beaconManager.startRangingBeaconsInRegion(new Region("all-beacons-region", null, null, null));
-//        } catch (RemoteException e) {
-//            e.printStackTrace();
-//        }
+        beaconManager.addRangeNotifier(new RangeNotifier() {
+            @Override
+            public void didRangeBeaconsInRegion(Collection<Beacon> collection, Region region) {
+                Log.i("IIIIII", "didRangeBeaconsInRegion: 调用了这个方法:" + collection.size());
+                if (collection.size() > 0) {
+                    //符合要求的beacon集合
+                    List<Beacon> beacons = new ArrayList<>();
+                    ArrayList myList = new ArrayList();
+                    for (Beacon beacon : collection) {
+                        beacons.add(beacon);
+                        url = UrlBeaconUrlCompressor.uncompress(beacon.getId1().toByteArray());
+                        String[] array  = url.split("/");
+//                        String BASE_URL = array[0] + "//" + array[2] + ".ngrok.io";
+
+                        path = Integer.parseInt(array[3]);
+
+//                        url = BASE_URL + "/" + path;
+                        if ( gv.getdUrl() == array[2] ){
+                            if( myList.size() < 2 || myList.get(myList.size()-1) != url){
+                                myList.add(url);
+
+                            }
+                        }
+
+
+                    }
+
+                        retrofit2.Call<pathSchema> call = gv.getApi().getpath(gv.getUid(), path);
+
+                        call.enqueue(new Callback<pathSchema>() {
+                            @Override
+                            public void onResponse(retrofit2.Call<pathSchema> call, Response<pathSchema> response) {
+
+                                result = response.body().getPath();
+                            }
+                            @Override
+                            public void onFailure(Call<pathSchema> call, Throwable t) {
+//                                Toast.makeText(MainActivity2.this,t.toString(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                    }
+
+                }
+
+
+        });
+        try {
+//            别忘了启动搜索,不然不会调用didRangeBeaconsInRegion方法
+            beaconManager.startRangingBeaconsInRegion(new Region("all-beacons-region", null, null, null));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

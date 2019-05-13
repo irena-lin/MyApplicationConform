@@ -124,13 +124,13 @@ public class About extends AppCompatActivity {
                     startActivity(it);
                     return true;
                 }
-                else if (id == R.id.action_settings) {
-                    // 按下「設定」要做的事
-//                    Toast.makeText(About.this, "設定", Toast.LENGTH_SHORT).show();
-                    it = new Intent(About.this, Setting.class);
-                    startActivity(it);
-                    return true;
-                }
+//                else if (id == R.id.action_settings) {
+//                    // 按下「設定」要做的事
+////                    Toast.makeText(About.this, "設定", Toast.LENGTH_SHORT).show();
+//                    it = new Intent(About.this, Setting.class);
+//                    startActivity(it);
+//                    return true;
+//                }
                 else if (id == R.id.action_about) {
                     // 按下「關於」要做的事
 //                    Toast.makeText(About.this, "關於", Toast.LENGTH_SHORT).show();

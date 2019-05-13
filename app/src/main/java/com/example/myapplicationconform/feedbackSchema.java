@@ -10,7 +10,12 @@ public class feedbackSchema {
     private String feedback;
     private Integer reply;
     private Integer RFid;
+    private String name;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+    public String getFName() {
+        return name;
+    }
 
     public Integer getUid() {
         return Uid;

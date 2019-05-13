@@ -8,89 +8,98 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 class FeedbackAdapter extends BaseAdapter {
 
-    private List<Map<String, Object>> getData() {
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        Map<String, Object> map,map1;
+    private List<feedbackSchema> result;
+    private List<feedbackSchema> data = new ArrayList<feedbackSchema>();
+    private LayoutInflater mInflater = null;
+    private Context context1;
+    private int pid;
+    final FeedbackAdapter FA = this;
+    private GlobalVariable gv;
 
-        map = new HashMap<String, Object>();
-        map.put("UserIcon", R.drawable.ic_person_add_black_24dp);
-        map.put("UserName", "i");
-        map.put("Feedback", "test");
-        list.add(map);
+    private void getData() {
+        gv = (GlobalVariable) context1.getApplicationContext();
 
-        map1 = new HashMap<String, Object>();
-        map1.put("UserIcon", R.drawable.ic_group_black_24dp);
-        map1.put("UserName", "i1");
-        map1.put("Feedback", "test2");
-        list.add(map1);
-        return list;
+        Call<feedback> call = gv.getApi().getFeedback(pid);
+
+        call.enqueue(new Callback<feedback>() {
+            @Override
+            public void onResponse(Call<feedback> call, Response<feedback> response) {
+                result = response.body().getFeedback();
+                FA.data = result;
+                FA.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<feedback> call, Throwable t) {
+
+            }
+        });
+
+
     }
 
 
     static class ViewHolder {
-        public ImageView Usericon;
         public TextView UserName;
         public TextView Feedback;
     }
 
-    private List<Map<String, Object>> data;
-    private LayoutInflater mInflater = null;
-
-    private Context context;
-
-    public FeedbackAdapter(Context context) {
-        data = getData();
+    public FeedbackAdapter(Context context, int Pid) {
+        pid = Pid;
+        context1 = context;
+        getData();
         this.mInflater = LayoutInflater.from(context);
     }
 
     @Override
     public int getCount() {
-        data = getData();
-        // How many items are in the data set represented by this Adapter.(在此适配器中所代表的数据集中的条目数)
+
         return data.size();
 
     }
 
     @Override
     public Object getItem(int position) {
-        data = getData();
-        // Get the data item associated with the specified position in the data set.(获取数据集中与指定索引对应的数据项)
+
         return data.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        data = getData();
-        // Get the row id associated with the specified position in the list.(取在列表中与指定索引对应的行id)
+
         return position;
     }
 
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        data = getData();
+
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = mInflater.inflate(R.layout.feedback_listitem, null);
-            holder.Usericon = (ImageView) convertView.findViewById(R.id.UserIcon);
             holder.UserName = (TextView) convertView.findViewById(R.id.UserName);
             holder.Feedback = (TextView) convertView.findViewById(R.id.Feedback);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.Usericon.setImageResource((Integer) data.get(position).get("UserIcon"));
-        holder.UserName.setText((String) data.get(position).get("UserName"));
-        holder.Feedback.setText((String) data.get(position).get("Feedback"));
+        holder.UserName.setText((String) data.get(position).getFName());
+        holder.Feedback.setText((String) data.get(position).getFeedback());
         return convertView;
     }
 }

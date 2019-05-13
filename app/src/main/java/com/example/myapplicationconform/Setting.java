@@ -6,12 +6,16 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.AlteredCharSequence;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +38,8 @@ public class Setting extends AppCompatActivity {
     private RelativeLayout relativeLayout;
     private GlobalVariable gv;
 
+    private ListView listView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,10 +47,26 @@ public class Setting extends AppCompatActivity {
 
         gv = (GlobalVariable)getApplicationContext();
 
+        listView();
+
         navigationView();
-        toolbar.setTitle("設定");
+        toolbar.setTitle("一覽");
     }
 
+
+    void listView() {
+        listView = (ListView) findViewById(R.id.listView);
+        ProductListAdapter adapter = new ProductListAdapter(Setting.this);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                new AlertDialog.Builder(Setting.this)
+                        .setTitle("我的意見")//設定視窗標題
+                        .setIcon(R.drawable.ic_mode_comment_black_24dp); //設定對話視窗圖示
+            }
+        });
+    }
 
 
     void navigationView() {
@@ -102,12 +124,12 @@ public class Setting extends AppCompatActivity {
                     it = new Intent(Setting.this, Event.class);
                     startActivity(it);
                     return true;
-                } else if (id == R.id.action_settings) {
-                    // 按下「設定」要做的事
-//                    Toast.makeText(Setting.this, "設定", Toast.LENGTH_SHORT).show();
-                    it = new Intent(Setting.this, Setting.class);
-                    startActivity(it);
-                    return true;
+//                } else if (id == R.id.action_settings) {
+//                    // 按下「設定」要做的事
+////                    Toast.makeText(Setting.this, "設定", Toast.LENGTH_SHORT).show();
+//                    it = new Intent(Setting.this, Setting.class);
+//                    startActivity(it);
+//                    return true;
                 } else if (id == R.id.action_about) {
                     // 按下「關於」要做的事
 //                    Toast.makeText(Setting.this, "關於", Toast.LENGTH_SHORT).show();
