@@ -117,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
         isLoggedin = mSharedPreferences.getBoolean("log", isLoggedin);
 
 
-
         if (firstOpenApp == 0) {
             // POST user
 

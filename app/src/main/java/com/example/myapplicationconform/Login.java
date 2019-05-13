@@ -1,5 +1,6 @@
 package com.example.myapplicationconform;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
@@ -7,6 +8,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -35,14 +37,36 @@ public class Login extends AppCompatActivity {
     private Button register;
     private GlobalVariable gv;
 
+    private final String DATA = "DATA";
+    private SharedPreferences mSharedPreferences;
+    private boolean isLoggedin = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
+
         navigationView();
         toolbar.setTitle("登入");
-        btn();
+
+        mSharedPreferences = getSharedPreferences(DATA, MODE_PRIVATE);
+        isLoggedin = mSharedPreferences.getBoolean("log", isLoggedin);
+        if(isLoggedin){
+            new AlertDialog.Builder(Login.this)
+                    .setTitle("已登入")
+                    .setMessage("嗨～\n歡迎回來囉～\n已經登入～\n請盡情享受～\n")
+                    .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent it = new Intent(Login.this, MainActivity.class);
+                            startActivity(it);
+                        }
+                    })
+                    .show();
+        }else{
+            btn();
+        }
     }
 
 
@@ -151,9 +175,6 @@ public class Login extends AppCompatActivity {
                                 Toast.makeText(Login.this, "尚未註冊", Toast.LENGTH_LONG).show();
                             }else if(response.code() == 200) {
                                 Toast.makeText(Login.this, "登入成功", Toast.LENGTH_LONG).show();
-
-                                final String DATA = "DATA";
-                                SharedPreferences mSharedPreferences = getSharedPreferences(DATA, MODE_PRIVATE);
                                 mSharedPreferences.edit()
                                         .putBoolean("log", true)
                                         .apply();
